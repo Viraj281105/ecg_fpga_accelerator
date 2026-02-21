@@ -5,11 +5,11 @@ from tqdm import tqdm
 def download_mitbih():
     """Download MIT-BIH Arrhythmia Database"""
     
-    # Create directory
-    download_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    download_dir = os.path.join(project_root, 'data', 'raw')
     os.makedirs(download_dir, exist_ok=True)
     
-    # Record list
     records = [
         '100', '101', '102', '103', '104', '105', '106', '107', 
         '108', '109', '111', '112', '113', '114', '115', '116',
@@ -22,36 +22,24 @@ def download_mitbih():
     print("="*60)
     print("MIT-BIH ARRHYTHMIA DATABASE DOWNLOAD")
     print("="*60)
-    print(f"Total records: {len(records)}")
-    print(f"Estimated size: ~2GB")
-    print(f"Destination: {os.path.abspath(download_dir)}")
-    print()
+    print(f"Records: {len(records)} | Size: ~2GB")
+    print(f"Destination: {download_dir}\n")
     
-    successful = 0
-    failed = []
+    original_dir = os.getcwd()
+    os.chdir(download_dir)
     
-    for record in tqdm(records, desc="Downloading"):
-        try:
-            # Download using correct parameter name
-            wfdb.rdrecord(record, pn_dir='mitdb')
-            wfdb.rdann(record, 'atr', pn_dir='mitdb')
-            
-            successful += 1
-            
-        except Exception as e:
-            failed.append((record, str(e)))
-            tqdm.write(f"✗ {record}: {str(e)[:60]}")
+    try:
+        for record in tqdm(records, desc="Downloading"):
+            wfdb.dl_database('mitdb', download_dir, records=[record])
+    finally:
+        os.chdir(original_dir)
     
-    print("\n" + "="*60)
-    print("DOWNLOAD COMPLETE")
-    print("="*60)
-    print(f"✓ Successful: {successful}/{len(records)}")
-    if failed:
-        print(f"✗ Failed: {len(failed)}")
+    files = os.listdir(download_dir)
+    print(f"\n{'='*60}")
+    print(f"✓ Downloaded: {len(files)} files")
+    print(f"{'='*60}")
     
-    return successful == len(records)
+    return len(files) > 0
 
 if __name__ == "__main__":
-    import sys
-    success = download_mitbih()
-    sys.exit(0 if success else 1)
+    download_mitbih()
