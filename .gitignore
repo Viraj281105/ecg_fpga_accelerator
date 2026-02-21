@@ -2,6 +2,19 @@ ecg_env/
 data/
 logs/
 
+# Model files
+*.pth
+*.pt
+*.ckpt
+
+# Data files
+data/raw/
+data/processed/*.npy
+*.pkl
+
+# Results (keep plots, ignore models)
+results/models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
