@@ -49,9 +49,10 @@ class ECGPreprocessor:
         segments = []
         labels = []
         
-        for ann in annotations:
-            r_peak = ann.sample
-            label = ann.symbol
+        # Iterate over annotation samples and symbols
+        for i in range(len(annotations.sample)):
+            r_peak = annotations.sample[i]
+            label = annotations.symbol[i]
             
             # Extract window centered on R-peak
             start = r_peak - self.window_size // 2
@@ -69,7 +70,7 @@ class ECGPreprocessor:
                     labels.append(1)
         
         return np.array(segments), np.array(labels)
-    
+        
     def normalize(self, segments):
         """Z-score normalization"""
         segments_flat = segments.reshape(-1, 1)
