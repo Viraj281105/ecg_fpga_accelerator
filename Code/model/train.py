@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import os
 
-from ecg_cnn import ECG_1DCNN
+from ecg_cnn import ECG_1DCNN_Optimized
 
 class ECGDataset(Dataset):
     def __init__(self, segments, labels):
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Using device: {device}")
     
-    model = ECG_1DCNN()
+    model = ECG_1DCNN_Optimized()
     print(f"Model parameters: {model.count_parameters():,}")
     
     # Train
