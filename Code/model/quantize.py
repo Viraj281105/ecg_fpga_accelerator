@@ -1,15 +1,14 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from ecg_cnn import ECG_1DCNN
+from ecg_cnn import ECG_1DCNN_Optimized  # ← FIXED
 from torch.utils.data import DataLoader, TensorDataset
-import copy
 import os
 
 class ModelQuantizer:
     """Quantize trained model to INT8 for FPGA deployment"""
     
-    def __init__(self, model, device='cuda'):
+    def __init__(self, model, device='cpu'):  # ← Use CPU for quantization
         self.model = model.to(device)
         self.device = device
         self.quantized_model = None
@@ -122,8 +121,9 @@ def main():
     
     # Load trained model
     print("\nLoading trained model...")
-    model = ECG_1DCNN()
-    model.load_state_dict(torch.load('results/models/best_model.pth'))
+    model = ECG_1DCNN_Optimized()  # ← FIXED
+    model.load_state_dict(torch.load('results/models/best_model.pth', 
+                                     map_location='cpu'))  # ← Load to CPU
     print("✓ Model loaded")
     
     # Load test data

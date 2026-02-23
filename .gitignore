@@ -6,6 +6,7 @@ logs/
 *.pth
 *.pt
 *.ckpt
+*.npz
 
 # Data files
 data/raw/
